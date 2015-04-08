@@ -39,3 +39,28 @@ p {
 .printer-list .printer-item.color-printer {
 	background-color: #D9EDF7;
 }
+
+.copies-label {
+	cursor: default;
+	margin-top: 1em;
+}
+
+.dragAndDropWrapper {
+	border: 2px dashed;
+	height: 3.3125em;
+	text-align: center;
+}
+
+.dragText {
+	margin-top: 0.75em;
+}
+
+input[type="file"].dragAndDrop {
+	visibility: hidden;
+	position: absolute;
+	height: 100%;
+	width: 95%;
+	margin: 0px;
+	top: 0px;
+	left:2.6%;
+}
