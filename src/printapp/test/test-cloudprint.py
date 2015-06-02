@@ -1,14 +1,11 @@
 import unittest
 import os
-import time
 import printapp.oauthcredentials
 import printapp.client
 import printapp.auth
 import printapp.cloudprint
 import printapp.test.util
 from printapp import app
-
-UNIFLOW_ID = 'eeec5cdd-8deb-e24a-8f04-30bf0447b555'
 
 @unittest.skipIf(printapp.test.util.is_cloudprint_api_key_missing(),
                  'no cloudprint api key found')
