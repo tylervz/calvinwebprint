@@ -121,7 +121,7 @@ def _wait_for_job_processing(auth, job_id):
     time.sleep(1)
     error_free = False
     num_tried = 0
-    while num_tried < 29 and error_free == False:
+    while (not error_free and num_tried < 15):
         time.sleep(1)
         num_tried += 1
         try:
@@ -139,9 +139,28 @@ def _wait_for_job_processing(auth, job_id):
                 if job.get('status', 'ERROR') == 'ERROR':
                     raise JobSubmissionError('Google could not correctly ' 
                                              + 'process the file submitted.')
-                elif job.get('status') == 'DONE':
+                if job.get('status') == 'DONE':
                     error_free = True
-                    break
+                break
+    # Check if it is still queued
+    if not error_free:
+        try:
+            job_history = client.list_jobs(auth=auth)['jobs']
+        except client.PrintingError as err:
+            raise JobSubmissionError(err)
+        except KeyError as err:
+            raise JobSubmissionError(err)
+        for job in job_history:
+            try:
+                id = job['id']
+            except KeyError as err:
+                raise JobSubmissionError(err)
+            if id == job_id:
+                if job.get('status', 'ERROR') == 'ERROR':
+                    raise JobSubmissionError('Google could not correctly ' 
+                                             + 'process the file submitted.')
+                if job.get('status') == 'QUEUED':
+                    raise JobSubmissionError('Stuck in queue.')
 
 
 class JobSubmissionError(Exception):
